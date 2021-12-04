@@ -266,7 +266,22 @@ class FrontController extends AbstractController
         $this->addFlash('success', 'L\'acteur "' . $actors->getFirstname() . '" a été supprimée avec succès');
         $manager->remove($actors);
         $manager->flush();
-        return$this->redirectToRoute('listActors');
+        return $this->redirectToRoute('listActors');
+    }
+
+
+
+    /**
+     * @Route("/detailMovies/{id}", name="detailMovies")
+     */
+    public function detailMovies(MoviesRepository $repository, $id)
+    {
+
+        $movies = $repository->find($id);
+
+        return $this->render("front/detailMovies.html.twig", [
+            'movies' => $movies
+        ]);
     }
 
 

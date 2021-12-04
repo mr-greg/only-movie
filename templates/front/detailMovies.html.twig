@@ -1,0 +1,33 @@
+{% extends "base.html.twig" %}
+{% block body %}
+
+    <div class="card mb-3 col-md-5 mx-auto p-0">
+        <h3 class="card-header text-center">{{movies.title}}</h3>
+        <img src="{{ asset('uploads/') }}{{ movies.cover }}"  alt="">
+        <div class="card-body">
+            <p class="card-text text-center">
+                <span class="font-weight-bold h5">Synopsis</span> <br>
+                {{movies.resume}}
+            </p>
+        </div>
+        <ul class="list-group list-group-flush">
+            <li class="list-group-item text-center"><span class="font-weight-bold h5">Production</span> <br>{{movies.director}}</li>
+            <li class="list-group-item text-center"><span class="font-weight-bold h5">Date de sortie</span> <br>{{movies.releaseDate | date('d/m/Y')}}</li>
+            <li class="list-group-item text-center"><span class="font-weight-bold h5">Genre</span><br>{{movies.categories.name}}</li>
+            <li class="list-group-item text-center">
+                <span class="font-weight-bold h5">Acteurs</span><br>{% for actor in movies.actors %}
+                {{ actor.firstname }} {{ actor.lastname}} <br> {% endfor %}
+            </li>
+        </ul>
+        <div class="card-body">
+            <div class="text-center">
+                <a href="#" class="card-link btn btn-success ">Réservation</a>
+            </div>
+        </div>
+        <div class="card-footer text-muted">
+        Auteur de l'article :
+        </div>
+    
+
+    
+{% endblock %}
