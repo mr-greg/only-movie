@@ -34,6 +34,11 @@ class Actors
      */
     private $movies;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $biography;
+
     public function __construct()
     {
         $this->movies = new ArrayCollection();
@@ -88,6 +93,18 @@ class Actors
     public function removeMovie(Movies $movie): self
     {
         $this->movies->removeElement($movie);
+
+        return $this;
+    }
+
+    public function getBiography(): ?string
+    {
+        return $this->biography;
+    }
+
+    public function setBiography(string $biography): self
+    {
+        $this->biography = $biography;
 
         return $this;
     }

@@ -270,6 +270,21 @@ class FrontController extends AbstractController
     }
 
 
+    /**
+     * @Route("/detailActors/{id}", name="detailActors")
+     */
+    public function detailActors(ActorsRepository $repository, $id)
+    {
+
+        $actors = $repository->find($id);
+
+        return $this->render("front/detailActors.html.twig", [
+            'actors' => $actors
+        ]);
+
+    }
+
+
 
     /**
      * @Route("/detailMovies/{id}", name="detailMovies")

@@ -21,6 +21,7 @@
             <th scope="col" class="font-weight-bold">#</th>
             <th scope="col" class="font-weight-bold">Prénom</th>
             <th scope="col" class="font-weight-bold">Nom</th>
+            <th scope="col" class="font-weight-bold">Biographie</th>
             <th scope="col" class="font-weight-bold">Actions</th>
 
           </tr>
@@ -32,9 +33,10 @@
                 <th scope="row">{{ actor.id }}</th>
                 <td>{{actor.firstname}}</td>
                 <td>{{actor.lastname}}</td>
+                <td>{{actor.biography}}</td>
                 <td>
-                    <a href="{{ path('editActors', {id:actor.id}) }}" class="btn btn-success">Modifier</a>
-                    <a href="{{ path('deleteActors', {id:actor.id}) }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer l\'acteur : {{actor.firstname}} ?')" class="btn btn-danger">Supprimer</a>
+                    <a href="{{ path('editActors', {id:actor.id}) }}" class="btn btn-success" style="width:116px;">Modifier</a>
+                    <a href="{{ path('deleteActors', {id:actor.id}) }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer l\'acteur : {{actor.firstname}} ?')" class="btn btn-danger" style="width:116px;">Supprimer</a>
                 </td>
             {% endfor %}
             

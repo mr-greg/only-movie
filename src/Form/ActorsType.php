@@ -29,6 +29,13 @@ class ActorsType extends AbstractType
                     'placeholder'=>'Veuillez saisir le nom de famille de l\'acteur'
                 ]
             ])
+            ->add('biography', TextType::class, [
+                'required'=>false,
+                'label'=>false,
+                'attr'=>[
+                    'placeholder'=>'Veuillez saisir la biographie de l\'acteur'
+                ]
+            ])
             
             ->add('Valider', SubmitType::class)
         ;

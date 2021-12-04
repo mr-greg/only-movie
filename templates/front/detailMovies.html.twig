@@ -15,8 +15,14 @@
             <li class="list-group-item text-center"><span class="font-weight-bold h5">Date de sortie</span> <br>{{movies.releaseDate | date('d/m/Y')}}</li>
             <li class="list-group-item text-center"><span class="font-weight-bold h5">Genre</span><br>{{movies.categories.name}}</li>
             <li class="list-group-item text-center">
-                <span class="font-weight-bold h5">Acteurs</span><br>{% for actor in movies.actors %}
-                {{ actor.firstname }} {{ actor.lastname}} <br> {% endfor %}
+                <span class="font-weight-bold h5">Acteurs</span>
+                <br>
+                {% for actor in movies.actors %}
+                <a href="{{path ('detailActors', {id: actor.id}) }}">
+                    {{ actor.firstname }} {{ actor.lastname}} 
+                </a>
+                    <br> 
+                {% endfor %}
             </li>
         </ul>
         <div class="card-body">

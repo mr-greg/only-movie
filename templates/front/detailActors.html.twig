@@ -1,0 +1,36 @@
+{% extends "base.html.twig" %}
+{% block body %}
+
+<div class="card mb-3 col-md-4 mx-auto p-0">
+    <h3 class="card-header text-center">{{actors.firstname}} {{actors.lastname}}</h3>
+    <div class="card-body">
+      <p class="card-text">{{actors.biography}}</p>
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item h4 text-center">Filmographie</li>
+
+
+      {% for movie in actors.movies %}
+            <li class="list-group-item">
+                <a href="{{ path('detailMovies', {id: movie.id}) }}">
+                    {{ movie.title}}
+                </a>
+            </li>
+      {% endfor %}
+    </ul>
+
+
+
+
+
+
+    
+    <div class="card-footer text-muted">
+      Auteur de l'article :
+    </div>
+</div>
+
+    
+
+    
+{% endblock %}
