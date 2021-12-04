@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+   {{ parent() }}Accueil
+{% endblock %}
+
+
+{% block body %}
+
+
+
+    <h1>Accueil</h1>
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success text-center">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('danger') %}
+        <div class="alert alert-danger text-center">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+
+    <div class="row justify-content-between">
+        {% for movie in movies %}
+            <div class="card mb-3 col-md-3">
+                <div class="text-center">
+                    <img width="250" src="{{ asset('uploads/') }}{{ movie.cover() }}" alt="">
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">{{ movie.title }}</h5>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Réalisateur : {{movie.director}}</li>
+                    <li class="list-group-item">Dapibus ac facilisis in</li>
+                    <li class="list-group-item">Vestibulum at eros</li>
+                </ul>
+                <div class="card-body">
+                    <a href="#" class="card-link">Voir plus</a>
+                </div>
+                <div class="card-footer text-muted">
+                    Sortie en salle : {{ movie.releaseDate | date('d/m/Y') }}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+
+
+
+
+
+{% endblock %}

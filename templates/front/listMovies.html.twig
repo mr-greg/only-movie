@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+{% block title %}
+
+{% endblock %}
+
+
+{% block body %}
+{% for message in app.flashes('success') %}
+        <div class="alert alert-success text-center">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('danger') %}
+        <div class="alert alert-danger text-center">
+            {{ message }}
+        </div>
+    {% endfor %}
+
+    <a href="{{path('addMovies')}}" class="btn btn-success">Ajouter un film</a>
+
+    <table class="table table-dark mt-5">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Titre</th>
+            <th scope="col">Réalisateur</th>
+            <th scope="col">Synopsis</th>
+            <th scope="col">Date de Sortie</th>
+            <th scope="col">Affiche</th>
+            <th scope="col">Catégorie</th>
+            <th scope="col">Acteurs</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        {% for movie in movies %}
+
+        <tr>
+            <th scope="row">{{ movie.id }}</th>
+            <td>{{ movie.title }}</td>
+            <td>{{ movie.director }}</td>
+            <td>{{ movie.resume }}</td>
+            <td>{{ movie.releaseDate | date('d/m/Y') }}</td>
+            <td><img src="{{ asset('uploads/') }}{{ movie.cover }}" width="50" alt=""></td>
+            <td>{{ movie.categories.name }}</td>
+            <td>{% for actor in movie.actors %}
+                    {{ actor.firstname }} {{ actor.lastname }}
+                {% endfor %}</td>
+            <td>
+                <a href="{{ path('editMovies', {id: movie.id}) }}" class="btn btn-success">Modifier</a>
+                <a href="{{ path('deleteMovies', {id: movie.id}) }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer le film : {{movie.title}} ?')" class="btn btn-danger">Supprimer</a>
+            </td>
+        {% endfor %}
+        </tr>
+
+        </tbody>
+    </table>
+
+
+
+{% endblock %}
+
+
