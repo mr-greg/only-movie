@@ -24,6 +24,9 @@ class Movies
      */
     private $title;
 
+
+    public $coverUpdate;
+
     /**
      * @ORM\Column(type="string", length=255)
      */
@@ -44,6 +47,27 @@ class Movies
      */
     private $release_date;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Categories::class, inversedBy="movies")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $categories;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Actors::class, inversedBy="movies")
+     */
+    private $actors;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Users::class, inversedBy="createdMovies")
+     */
+    private $CreatedBy;
+
+    public function __construct()
+    {
+        $this->actors = new ArrayCollection();
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -59,24 +83,6 @@ class Movies
         $this->title = $title;
 
         return $this;
-    }
-
-    public $coverUpdate;
-
-    /**
-     * @ORM\ManyToOne(targetEntity=Categories::class, inversedBy="movies")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $categories;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Actors::class, inversedBy="movies")
-     */
-    private $actors;
-
-    public function __construct()
-    {
-        $this->actors = new ArrayCollection();
     }
 
     public function getDirector(): ?string
@@ -162,6 +168,18 @@ class Movies
         if ($this->actors->removeElement($actor)) {
             $actor->removeMovie($this);
         }
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?Users
+    {
+        return $this->CreatedBy;
+    }
+
+    public function setCreatedBy(?Users $CreatedBy): self
+    {
+        $this->CreatedBy = $CreatedBy;
 
         return $this;
     }

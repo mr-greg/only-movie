@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <link rel="stylesheet" href="{{ asset('css/select2.css') }}">
+<div class="row justify-content-center">
+    {% if affich==false %}
+
+
+    <div class="col-md-6">
+        {{ form_start(form) }}
+
+        <label for="">Titre</label>
+        {{ form_row(form.title) }}
+
+        <label for="">Réalisateur</label>
+        {{ form_row(form.director) }}
+
+        <label for="">Synopsis</label>
+        {{ form_row(form.resume) }}
+
+        <label for="">Date de sortie</label>
+        {{ form_row(form.release_date) }}
+
+        <label for="">Catégorie</label>
+        {{ form_row(form.categories) }}
+
+        <label for="">Acteurs</label>
+        {{ form_row(form.actors) }}
+
+            <a href="{{ path('addActor',{param: true}) }}" class="btn btn-primary">+</a><br>
+
+
+        <label for="">Affiche</label>
+        {{ form_row(form.cover, {'attr':{ 'onChange': 'loadFile(event)'}     }) }}
+        <div class="text-center">
+            <img id="image" style="width: 300px">
+        </div>
+
+        {{ form_row(form.Valider) }}
+
+        {{ form_end(form) }}
+    </div>
+    {% endif %}
+    {% if affich == true %}
+
+    <div class="col-md-6">{{ form(formActor) }}</div>
+    {% endif %}
+</div>
+
+    <script>
+        var loadFile= function (event) {
+
+            var image= document.getElementById('image');
+
+            image.src= URL.createObjectURL(event.target.files[0]);
+
+        };
+
+    </script>
+
+    <script src="{{ asset('js/jquery.min.js') }}"></script>
+    <script src="{{ asset('js/select2.js') }}"></script>
+
+    <script>
+        $(function(){
+            $('.select2').select2()
+        });
+    </script>
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
+

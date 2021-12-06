@@ -25,6 +25,7 @@ class MoviesType extends AbstractType
         $builder
             ->add('actors', EntityType::class, [
                 "label"=>false,
+                'required'=>false,
                 "class"=>Actors::class,
                 "choice_label"=> function(Actors $actors){
                     return $actors->getFirstname().' '.$actors->getLastname();
@@ -88,6 +89,7 @@ class MoviesType extends AbstractType
             $builder
                 ->add('actors', EntityType::class, [
                     "label"=>false,
+                    'required'=>false,
                     "class"=>Actors::class,
                     "choice_label"=> function(Actors $actors){
                     return $actors->getFirstname().' '.$actors->getLastname();

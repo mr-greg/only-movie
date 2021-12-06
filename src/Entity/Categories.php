@@ -6,6 +6,7 @@ use App\Repository\CategoriesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=CategoriesRepository::class)
@@ -20,6 +21,7 @@ class Categories
     private $id;
 
     /**
+     * @Assert\NotBlank( message="Ce champs est obligatoire")
      * @ORM\Column(type="string", length=255)
      */
     private $name;

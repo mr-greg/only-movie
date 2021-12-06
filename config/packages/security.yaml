@@ -3,16 +3,32 @@ security:
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
+    #ici on précise à symfony quelle clé de cryptage doit être utilisée et sur quelle entité
+    encoders:
+        App\Entity\Users:
+            algorithm: bcrypt
     # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
     providers:
         users_in_memory: { memory: null }
+        in_database:
+            entity:
+                class: App\Entity\Users
+                property: email
     firewalls:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
         main:
             lazy: true
-            provider: users_in_memory
+            provider: in_database
+
+            form_login:
+                login_path: login
+                check_path: login
+
+            logout:
+                path: logout
+                target: home
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall

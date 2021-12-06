@@ -5,15 +5,14 @@ namespace App\Controller;
 use App\Entity\Actors;
 use App\Entity\Categories;
 use App\Entity\Movies;
+use App\Form\ActorsType;
 use App\Form\CategoriesType;
 use App\Form\MoviesType;
-use App\Form\ActorsType;
 use App\Repository\ActorsRepository;
 use App\Repository\CategoriesRepository;
 use App\Repository\MoviesRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\BrowserKit\Request as BrowserKitRequest;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -150,14 +149,14 @@ class FrontController extends AbstractController
             else:
                 $this->addFlash('success', 'Catégorie modifiée avec succès');
             endif;
-            
+
             return $this->redirectToRoute('addCategories');
         endif;
 
         return $this->render('front/addCategories.html.twig', [
             'form' => $form->createView(),
             'categories' => $categories,
-            'ajout'=>$ajout
+            'ajout' => $ajout
         ]);
 
 
@@ -170,7 +169,7 @@ class FrontController extends AbstractController
     public function listMovies(MoviesRepository $repository)
     {
         $movies = $repository->findAll();
-       // dd($movies);
+
         return $this->render("front/listMovies.html.twig", [
             'movies' => $movies
         ]);
@@ -181,11 +180,11 @@ class FrontController extends AbstractController
      */
     public function deleteMovies(Movies $movies, EntityManagerInterface $manager)
     {
-        $this->addFlash('success', $movies->getTitle().' supprimé avec succès');
+        $this->addFlash('success', $movies->getTitle() . ' supprimé avec succès');
         $manager->remove($movies);
         $manager->flush();
-        return$this->redirectToRoute('listMovies');
-      
+        return $this->redirectToRoute('listMovies');
+
     }
 
     /**
@@ -193,41 +192,25 @@ class FrontController extends AbstractController
      */
     public function deleteCategories(Categories $categories, EntityManagerInterface $manager)
     {
-        $this->addFlash('success', 'La catégorie "' . $categories->getName() . '" a été supprimée avec succès');
+        $this->addFlash('success', 'Catégorie supprimé avec succès');
         $manager->remove($categories);
         $manager->flush();
-        return$this->redirectToRoute('addCategories');
+        return $this->redirectToRoute('addCategories');
 
     }
 
-
     /**
-     * @Route("listActors", name="listActors")
-     */
-    // public function listActors(Request $request, EntityManagerInterface $manager)
-    // {
-
-    //     $actor = new Actors();
-
-    //     $form = $this->createForm(ActorsType::class, $actor);
-
-    //     $form->handleRequest($request);
-
-        
-    // }
-
-    /**
-     * @Route("/listActors", name="listActors")
+     * @Route("/actors", name="actors")
      * @Route("/editActors/{id}", name="editActors")
      */
-    public function listActors(Request $request, EntityManagerInterface $manager, ActorsRepository $repository, $id = null)
+    public function Actors(ActorsRepository $repository, EntityManagerInterface $manager, Request $request, $id = null)
     {
         $ajout = false;
 
         $actors = $repository->findAll();
 
         if (!$id):
-            $actor = new Actors();
+            $actor = new actors();
             $ajout = true;
         else:
             $actor = $repository->find($id);
@@ -243,32 +226,34 @@ class FrontController extends AbstractController
             $manager->flush();
 
             if (!$id):
-                $this->addFlash('success', 'L\'acteur a été ajouté avec succès');
+                $this->addFlash('success', 'Acteur ajouté avec succès');
             else:
-                $this->addFlash('success', 'L\'acteur a été modifié avec succès');
+                $this->addFlash('success', 'Acteur modifié avec succès');
             endif;
-            
-            return $this->redirectToRoute('listActors');
+
+            return $this->redirectToRoute('actors');
         endif;
 
-        return $this->render('front/listActors.html.twig', [
+
+        return $this->render('front/actors.html.twig', [
             'form' => $form->createView(),
-            'actors' => $actors,
-            'ajout'=>$ajout
+            'ajout' => $ajout,
+            'actors' => $actors
         ]);
     }
+
 
     /**
      * @Route("/deleteActors/{id}", name="deleteActors")
      */
     public function deleteActors(Actors $actors, EntityManagerInterface $manager)
     {
-        $this->addFlash('success', 'L\'acteur "' . $actors->getFirstname() . '" a été supprimée avec succès');
+        $this->addFlash('success', 'Acteur supprimé avec succès');
         $manager->remove($actors);
         $manager->flush();
-        return $this->redirectToRoute('listActors');
-    }
+        return $this->redirectToRoute('actors');
 
+    }
 
     /**
      * @Route("/detailActors/{id}", name="detailActors")
@@ -284,9 +269,7 @@ class FrontController extends AbstractController
 
     }
 
-
-
-    /**
+     /**
      * @Route("/detailMovies/{id}", name="detailMovies")
      */
     public function detailMovies(MoviesRepository $repository, $id)
@@ -299,5 +282,112 @@ class FrontController extends AbstractController
         ]);
     }
 
+
+    /**
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @Route("/usersMovies", name="usersMovies")
+     * @Route("/addActor/{param}", name="addActor")
+     */
+    public function usersMovies(Request $request, EntityManagerInterface $manager, $param=null)
+    {
+        $affich=false;
+        if ($param):
+           // dd('coucou');
+         $affich=true;
+            endif;
+
+
+        $movie = new Movies();
+        $form = $this->createForm(MoviesType::class, $movie, ['add' => true]);
+        $form->handleRequest($request);
+        $actor = new Actors();
+        $formActor = $this->createForm(ActorsType::class, $actor);
+        $formActor->handleRequest($request);
+
+        if ($formActor->isSubmitted() && $formActor->isValid()):
+            $manager->persist($actor);
+            $manager->flush();
+                $affich=false;
+            return $this->redirectToRoute('usersMovies',['affich'=>$affich]);
+
+        endif;
+
+        if ($form->isSubmitted() && $form->isValid()):
+            $coverFile = $form->get('cover')->getData();
+            //dd($coverFile);
+            $coverName = date('YmdHis') . uniqid() . $coverFile->getClientOriginalName();
+            $coverFile->move($this->getParameter('cover_directory'),
+                $coverName);
+            //dd($movie);
+            $movie->setCover($coverName);
+            $movie->setCreatedBy($this->getUser());
+            $manager->persist($movie);
+            $manager->flush();
+
+            return $this->redirectToRoute('listUsersMovies');
+        endif;
+
+
+        return $this->render('front/usersMovies.html.twig',[
+            'form'=>$form->createView(),
+            'formActor'=>$formActor->createView(),
+            'affich'=>$affich
+        ]);
+
+    }
+
+
+    /**
+     * @Route("/listUsersMovies", name="listUsersMovies")
+     */
+    public function listUsersMovies(MoviesRepository $repository)
+    {
+        $movies=$repository->findBy(['CreatedBy'=>$this->getUser()]);
+
+        return $this->render('front/listUsersMovies.html.twig',[
+            'movies'=>$movies
+        ]);
+    }
+
+    /**
+     * @Route("/editUsersMovies/{id}", name="editUsersMovies")
+     */
+    public function editUsersMovies(Movies $movie, Request $request, EntityManagerInterface $manager)
+    {
+
+        $form = $this->createForm(MoviesType::class, $movie, ['update' => true]);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()):
+            $coverFile = $form->get('coverUpdate')->getData();
+            // si on a une photo en modification
+            if ($coverFile):
+                //alors on renomme le fichier
+                $coverName = date('dmYHis') . uniqid() . $coverFile->getClientOriginalName();
+                // puis on l'upload dans notre dossier 'uploads'
+                $coverFile->move($this->getParameter('cover_directory'), $coverName);
+                // on supprime l'ancienne photo présente dans le dossier d'uploads
+                unlink($this->getParameter('cover_directory') . '/' . $movie->getCover());
+                // on affecte le nouveau nom de fichier à notre objet
+                $movie->setCover($coverName);
+
+            endif;
+            // on prépare la requête et la gardons en mémoire
+            $manager->persist($movie);
+            // on execute la ou les requetes
+            $manager->flush();
+            $this->addFlash('success', 'Modification effectuée avec succès');
+            return $this->redirectToRoute('listUsersMovies');
+        endif;
+
+
+        return $this->render('front/editUsersMovies.html.twig', [
+            'form' => $form->createView(),
+            'movie' => $movie
+
+        ]);
+    }
 
 }

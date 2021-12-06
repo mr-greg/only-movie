@@ -14,19 +14,18 @@ class ActorsType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('firstname', TextType::class, [
-
+            ->add('firstname', TextType::class,[
                 'required'=>false,
                 'label'=>false,
                 'attr'=>[
                     'placeholder'=>'Veuillez saisir le prénom de l\'acteur'
                 ]
             ])
-            ->add('lastname', TextType::class, [
+            ->add('lastname', TextType::class,[
                 'required'=>false,
                 'label'=>false,
                 'attr'=>[
-                    'placeholder'=>'Veuillez saisir le nom de famille de l\'acteur'
+                    'placeholder'=>'Veuillez saisir le nom de l\'acteur'
                 ]
             ])
             ->add('biography', TextType::class, [
@@ -36,7 +35,6 @@ class ActorsType extends AbstractType
                     'placeholder'=>'Veuillez saisir la biographie de l\'acteur'
                 ]
             ])
-            
             ->add('Valider', SubmitType::class)
         ;
     }

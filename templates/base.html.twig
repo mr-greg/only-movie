@@ -29,24 +29,29 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{{ path('addMovies') }}">Ajouter un film</a>
+                        <a class="nav-link" href="{{ path('usersMovies') }}">Ajouter un film</a>
+                    </li>
+                    {% if not app.user %}
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-success text-dark" href="{{ path('register') }}">S'inscrire</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="">A definir</a>
+                        <a class="nav-link btn btn-primary text-white" href="{{ path('login') }}">Se connecter</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="#">About</a>
-                    </li>
+                        {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ path('listUsersMovies') }}">Mes ajouts</a>
+                        </li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">ADMIN</a>
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">{{ app.user.username }}</a>
                         <div class="dropdown-menu">
-                            <a class="dropdown-item" href="{{ path('listMovies') }}">Gestion Films</a>
-                            <a class="dropdown-item" href="{{ path('addCategories') }}">Gestion Catégories</a>
-                            <a class="dropdown-item" href="{{ path('listActors') }}">Gestion Acteurs</a>
+                            <a class="dropdown-item" href="{{ path('listMovies') }}">Accès Backoffice</a>
+
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" href="#">Separated link</a>
+                            <a class="dropdown-item" href="{{ path('logout') }}">Déconnexion</a>
                         </div>
                     </li>
+                    {% endif %}
                 </ul>
                 <form class="d-flex">
                     <input class="form-control me-sm-2" type="text" placeholder="Search">

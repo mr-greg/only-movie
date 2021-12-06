@@ -18,19 +18,21 @@
         <thead>
         <tr>
             <th scope="col">#</th>
+            <th scope="col">Prénom</th>
             <th scope="col">Nom</th>
             <th scope="col">Actions</th>
 
         </tr>
         </thead>
         <tbody>
-        {% for categorie in categories %}
+        {% for actor in actors %}
         <tr>
-            <th scope="row">{{ categorie.id }}</th>
-            <td>{{ categorie.name }}</td>
+            <th scope="row">{{ actor.id }}</th>
+            <td>{{ actor.firstname }}</td>
+            <td>{{ actor.lastname }}</td>
             <td>
-                <a href="{{ path('editCategories', {id: categorie.id}) }}" class="btn btn-success">Modifier</a>
-                <a href="{{ path('deleteCategories', {id: categorie.id}) }}"  onclick="return confirm('Etes-vous sûr de vouloir supprimer cette catégorie ')" class="btn btn-danger">Supprimer</a>
+                <a href="{{ path('editActors', {id: actor.id}) }}" class="btn btn-success">Modifier</a>
+                <a href="{{ path('deleteActors', {id: actor.id}) }}"  onclick="return confirm('Etes-vous sûr de vouloir supprimer cet acteur ')" class="btn btn-danger">Supprimer</a>
             </td>
             {% endfor %}
         </tr>
@@ -44,17 +46,17 @@
 
 {% block title %}
     {% if ajout==true  %}
-    {{ parent() }}ajout de catégorie
+        {{ parent() }}ajout d'un acteur
     {% else %}
-        {{ parent() }}Modification de catégorie
+        {{ parent() }}Modification de l'acteur
     {% endif %}
 {% endblock %}
 
 {% block titre %}
     {% if ajout==true  %}
-    Ajout de catégorie
+        Ajout d'un acteur
     {% else %}
-    Modification de catégorie
+        Modification de l'acteur
     {% endif %}
 {% endblock %}
 

@@ -14,7 +14,7 @@ class CategoriesType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name', TextType::class, [
+            ->add('name', TextType::class,[
                 'required'=>false,
                 'label'=>false,
                 'attr'=>[
@@ -32,7 +32,3 @@ class CategoriesType extends AbstractType
         ]);
     }
 }
-
-
-
-
