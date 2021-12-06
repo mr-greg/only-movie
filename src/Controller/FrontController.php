@@ -11,6 +11,7 @@ use App\Form\MoviesType;
 use App\Repository\ActorsRepository;
 use App\Repository\CategoriesRepository;
 use App\Repository\MoviesRepository;
+use App\Repository\UsersRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -388,6 +389,20 @@ class FrontController extends AbstractController
             'movie' => $movie
 
         ]);
+    }
+
+    /**
+     * @Route("/listUsers", name="listUsers")
+     */
+    public function listUsers(UsersRepository $repository)
+    {
+
+        $users = $repository->findAll();
+
+        return $this->render("front/listUsers.html.twig", [
+            'users' => $users
+        ]);
+
     }
 
 }

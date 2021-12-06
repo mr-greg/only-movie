@@ -34,12 +34,12 @@
             </li>
             <li class="nav-item ms-2 mt-5">
                 <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                    <a href="" class="btn btn-primary nav-link active">Gestion des articles</a>
+                    <a href="" class="btn btn-primary nav-link active">Gestion des films</a>
                     <div class="btn-group" role="group">
                         <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" style="">
-                            <a class="dropdown-item" href="{{ path('listMovies') }}">Liste des articles</a>
-                            <a class="dropdown-item" href="{{ path('addMovies') }}">Ajout article</a>
+                            <a class="dropdown-item" href="{{ path('listMovies') }}">Liste des films</a>
+                            <a class="dropdown-item" href="{{ path('addMovies') }}">Ajouter un film</a>
                         </div>
                     </div>
                 </div>
@@ -81,7 +81,7 @@
             </li>
             <li class="nav-item ms-2 mt-3">
                 <div class="btn-group" role="group" aria-label="Button group with nested dropdown">
-                    <a href="" class="btn btn-primary nav-link active">Gestion des utilisateur</a>
+                    <a href="{{ path('listUsers') }}" class="btn btn-primary nav-link active">Gestion des utilisateur</a>
                     <div class="btn-group" role="group">
                         <button id="btnGroupDrop1" type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></button>
                         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1" style="">
