@@ -26,7 +26,7 @@
     </div>
     {% for movie in movies %}
 
-    <div class="card mb-3 col-md-5 mx-auto p-0">
+    <div class="card mb-3 col-md-5 mb-5 mx-auto p-0">
         <h3 class="card-header text-center">{{movie.title}}</h3>
         <img src="{{ asset('uploads/') }}{{ movie.cover }}"  alt="">
         <div class="card-body">
@@ -53,14 +53,15 @@
         <div class="card-body">
             <div class="text-center">
                 <a href="{{ path('editUsersMovies', {id: movie.id}) }}" class="card-link btn btn-success ">Modifier</a>
-                <a href="{{ path('deleteMovies', {id: movie.id}) }}" onclick="return confirm('$Êtes-vous sûr de vouloir supprimer ce film ?')" class="card-link btn btn-danger ">Supprimer</a>
+                <a href="{{ path('deleteUsersMovies', {id: movie.id}) }}" onclick="return confirm('$Êtes-vous sûr de vouloir supprimer ce film ?')" class="card-link btn btn-danger ">Supprimer</a>
             </div>
         </div>
         <div class="card-footer text-muted">
         Auteur de l'article : {{ movie.createdby.username }}
         </div>
+    </div>
 
-        {% endfor %}
+    {% endfor %}
 
 {% endblock %}
 

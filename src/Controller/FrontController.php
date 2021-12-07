@@ -352,6 +352,18 @@ class FrontController extends AbstractController
     }
 
     /**
+    * @Route("/deleteUsersMovies/{id}", name="deleteUsersMovies")
+    */
+    public function deleteUsersMovies(Movies $movies, EntityManagerInterface $manager)
+    {
+        $this->addFlash('success', $movies->getTitle() . ' supprimé avec succès');
+        $manager->remove($movies);
+        $manager->flush();
+        return $this->redirectToRoute('listUsersMovies');
+
+    }
+
+    /**
      * @Route("/editUsersMovies/{id}", name="editUsersMovies")
      */
     public function editUsersMovies(Movies $movie, Request $request, EntityManagerInterface $manager)
