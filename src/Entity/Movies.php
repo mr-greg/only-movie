@@ -63,9 +63,15 @@ class Movies
      */
     private $CreatedBy;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Reviews::class, mappedBy="movie")
+     */
+    private $reviews;
+
     public function __construct()
     {
         $this->actors = new ArrayCollection();
+        $this->reviews = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -180,6 +186,36 @@ class Movies
     public function setCreatedBy(?Users $CreatedBy): self
     {
         $this->CreatedBy = $CreatedBy;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Reviews[]
+     */
+    public function getReviews(): Collection
+    {
+        return $this->reviews;
+    }
+
+    public function addReview(Reviews $review): self
+    {
+        if (!$this->reviews->contains($review)) {
+            $this->reviews[] = $review;
+            $review->setMovie($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReview(Reviews $review): self
+    {
+        if ($this->reviews->removeElement($review)) {
+            // set the owning side to null (unless already changed)
+            if ($review->getMovie() === $this) {
+                $review->setMovie(null);
+            }
+        }
 
         return $this;
     }

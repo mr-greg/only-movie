@@ -84,9 +84,15 @@ class Users implements UserInterface,PasswordAuthenticatedUserInterface
      */
     private $createdMovies;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Reviews::class, mappedBy="createdBy")
+     */
+    private $reviews;
+
     public function __construct()
     {
         $this->createdMovies = new ArrayCollection();
+        $this->reviews = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -205,6 +211,36 @@ class Users implements UserInterface,PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($createdMovie->getCreatedBy() === $this) {
                 $createdMovie->setCreatedBy(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Reviews[]
+     */
+    public function getReviews(): Collection
+    {
+        return $this->reviews;
+    }
+
+    public function addReview(Reviews $review): self
+    {
+        if (!$this->reviews->contains($review)) {
+            $this->reviews[] = $review;
+            $review->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReview(Reviews $review): self
+    {
+        if ($this->reviews->removeElement($review)) {
+            // set the owning side to null (unless already changed)
+            if ($review->getCreatedBy() === $this) {
+                $review->setCreatedBy(null);
             }
         }
 

@@ -5,12 +5,14 @@ namespace App\Controller;
 use App\Entity\Actors;
 use App\Entity\Categories;
 use App\Entity\Movies;
+use App\Entity\Reviews;
 use App\Form\ActorsType;
 use App\Form\CategoriesType;
 use App\Form\MoviesType;
 use App\Repository\ActorsRepository;
 use App\Repository\CategoriesRepository;
 use App\Repository\MoviesRepository;
+use App\Repository\ReviewsRepository;
 use App\Repository\UsersRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -270,16 +272,76 @@ class FrontController extends AbstractController
 
     }
 
-     /**
-     * @Route("/detailMovies/{id}", name="detailMovies")
-     */
-    public function detailMovies(MoviesRepository $repository, $id)
+    /**
+    * @Route("/detailMovies/{id}", name="detailMovies")
+    * @Route("/formReview/{id}/{param}", name="formReview")
+    */
+    public function detailMovies(MoviesRepository $repository, ReviewsRepository $reviewsRepository, Request $request, EntityManagerInterface $manager, $id = null, $param = null)
     {
+        $affich = false;
 
+        if($param){
+            $affich = true;
+        }
+        
         $movies = $repository->find($id);
 
+        $reviews=$reviewsRepository->findBy(['movie' => $movies ], ['publish_date' => 'DESC'], 5);
+        // dd($reviews);
+        $user = $this->getUser();
+        $result = $reviewsRepository->findBy(['createdBy' => $user, 'movie' => $movies]);
+
+        if(count($result)==0){
+            $review = new Reviews();
+
+        }else{
+            $affich = false;
+            $this->addFlash('danger', 'Vous avez déjà voté sur ce film');
+        }
+
+        if( !empty($_POST) ){
+
+            
+            
+            $comment = $request->request->get('review');
+            $rating = $request->request->get('rating');
+            
+            $user = $this->getUser();
+            
+            $result = $reviewsRepository->findBy(['createdBy' => $user, 'movie' => $movies ]);
+            $review = new Reviews();
+
+            $review->setCreatedBy($user)->setComment($comment)->setPublishDate(new \DateTime())->setRating($rating)->setMovie($movies);
+
+            $manager->persist($review);
+            $manager->flush();
+
+            $this->addFlash('success', 'Merci de votre contribution :3');
+
+            //on fait la redirect où on récup l'id, faut lui passer en paramètre comme ci-dessous
+            return $this->redirectToRoute('detailMovies', ['id'=>$id]);
+            
+        }
+
+
         return $this->render("front/detailMovies.html.twig", [
-            'movies' => $movies
+            'movies' => $movies,
+            'affich' => $affich,
+            'reviews' => $reviews
+        ]);
+    }
+
+    /**
+     * @Route("/reviews/{id}", name="reviews")
+     */
+    public function reviews(ReviewsRepository $reviewsRepository, MoviesRepository $repository, $id)
+    {
+
+        $movie = $repository->find($id);
+        $reviews = $reviewsRepository->findBy(['movie'=> $movie], ['publish_date' => 'DESC']);
+
+        return $this->render('front/reviews.html.twig', [
+            'reviews' => $reviews,
         ]);
     }
 
@@ -416,5 +478,60 @@ class FrontController extends AbstractController
         ]);
 
     }
+
+    /**
+     * @Route("/listReviews/{id}", name="listReviews")
+     */
+    public function listReviews(MoviesRepository $moviesRepository , ReviewsRepository $repository, $id=null)
+    {
+        $movie = $moviesRepository->find($id);
+        
+        $reviews = $repository->findBy([
+            'movie'=>$movie
+        ]);
+
+        
+
+        return $this->render("front/listReviews.html.twig", [
+            'reviews' => $reviews,
+            'movie'=>$movie
+        ]);
+
+    }
+
+
+    //ici vu qu'on avait besoin de rediriger vers l'id du film, on a rajouté un /{movie} dans l'URL pour récup l'info
+    /**
+     * @Route("/deleteReview/{id}/{movie}", name="deleteReview")
+     */
+    public function deleteReview(Reviews $reviews, EntityManagerInterface $manager, $movie)
+    {
+
+        $manager->remove($reviews);
+        $manager->flush();
+        $this->addFlash('success', 'Commentaire supprimé avec succès');
+        return $this->redirectToRoute('listReviews', ['id'=>$movie]);
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

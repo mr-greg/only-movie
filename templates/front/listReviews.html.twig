@@ -1,0 +1,50 @@
+{% extends 'backoffice.html.twig' %}
+
+{% block title %}
+    Reviews 
+{% endblock %}
+
+{% block titre %}
+    Reviews de {{movie.title}}
+{% endblock %}
+
+{% block body %}
+{% for message in app.flashes('success') %}
+        <div class="alert alert-success text-center">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('danger') %}
+        <div class="alert alert-danger text-center">
+            {{ message }}
+        </div>
+{% endfor %}
+
+<table class="table table-hover">
+    <thead>
+      <tr>
+        <th scope="col">⭐</th>
+        <th scope="col">Commentaire</th>
+        <th scope="col">Note</th>
+        <th scope="col">Date</th>
+        <th scope="col">Utilisateur</th>
+        <th scope="col">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for review in reviews %}
+      <tr class="table-secondary">
+        <th scope="row">{{review.id}}</th>
+        <th>{{review.comment}}</th>
+        <th>{{review.rating}}</th>
+        <th>{{review.publishDate | date('d/m/Y')}}</th>
+        <td>{{review.createdBy.firstname}}</td>
+        <td>
+            <a href="{{ path('deleteReview', {id: review.id, movie: movie.id} ) }}" onclick="return confirm('Etes-vous sûr de vouloir supprimer le commentaire ?')" class="btn btn-danger" >Supprimer</a>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

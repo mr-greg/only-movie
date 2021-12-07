@@ -24,45 +24,69 @@
     <div class="text-center mb-5">
         <h1>Mes contributions :</h1>
     </div>
-    {% for movie in movies %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            {% for movie in movies %}
 
-    <div class="card mb-3 col-md-5 mb-5 mx-auto p-0">
-        <h3 class="card-header text-center">{{movie.title}}</h3>
-        <img src="{{ asset('uploads/') }}{{ movie.cover }}"  alt="">
-        <div class="card-body">
-            <p class="card-text text-center">
-                <span class="font-weight-bold h5">Synopsis</span> <br>
-                {{movie.resume}}
-            </p>
-        </div>
-        <ul class="list-group list-group-flush">
-            <li class="list-group-item text-center"><span class="font-weight-bold h5">Production</span> <br>{{movie.director}}</li>
-            <li class="list-group-item text-center"><span class="font-weight-bold h5">Date de sortie</span> <br>{{movie.releaseDate | date('d/m/Y')}}</li>
-            <li class="list-group-item text-center"><span class="font-weight-bold h5">Genre</span><br>{{movie.categories.name}}</li>
-            <li class="list-group-item text-center">
-                <span class="font-weight-bold h5">Acteurs</span>
-                <br>
-                {% for actor in movie.actors %}
-                <a href="{{path ('detailActors', {id: actor.id}) }}">
-                    {{ actor.firstname }} {{ actor.lastname}} 
-                </a>
-                    <br> 
-                {% endfor %}
-            </li>
-        </ul>
-        <div class="card-body">
-            <div class="text-center">
-                <a href="{{ path('editUsersMovies', {id: movie.id}) }}" class="card-link btn btn-success ">Modifier</a>
-                <a href="{{ path('deleteUsersMovies', {id: movie.id}) }}" onclick="return confirm('$Êtes-vous sûr de vouloir supprimer ce film ?')" class="card-link btn btn-danger ">Supprimer</a>
+            <div class="card mb-5 p-0">
+                <h3 class="card-header text-center">{{movie.title}}</h3>
+                <img src="{{ asset('uploads/') }}{{ movie.cover }}"  alt="">
+                <div class="card-body">
+                    <p class="card-text text-center">
+                        <span class="font-weight-bold h5">Synopsis</span> <br>
+                        {{movie.resume}}
+                    </p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item text-center"><span class="font-weight-bold h5">Production</span> <br>{{movie.director}}</li>
+                    <li class="list-group-item text-center"><span class="font-weight-bold h5">Date de sortie</span> <br>{{movie.releaseDate | date('d/m/Y')}}</li>
+                    <li class="list-group-item text-center"><span class="font-weight-bold h5">Genre</span><br>{{movie.categories.name}}</li>
+                    <li class="list-group-item text-center">
+                        <span class="font-weight-bold h5">Acteurs</span>
+                        <br>
+                        {% for actor in movie.actors %}
+                        <a href="{{path ('detailActors', {id: actor.id}) }}">
+                            {{ actor.firstname }} {{ actor.lastname}} 
+                        </a>
+                        <br>
+                        {% endfor %}
+                    </li>
+                </ul>
+                <div class="card-body">
+                    <div class="text-center">
+                        <a href="{{ path('editUsersMovies', {id: movie.id}) }}" class="card-link btn btn-success ">Modifier</a>
+                        <a href="{{ path('deleteUsersMovies', {id: movie.id}) }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer {{ movie.title }} ?')" class="card-link btn btn-danger ">Supprimer</a>
+                    </div>
+                </div>
+                <div class="card-footer text-muted">
+                Auteur de l'article : {{ movie.createdby.username }}
+                </div>
             </div>
+
+            {% endfor %}
         </div>
-        <div class="card-footer text-muted">
-        Auteur de l'article : {{ movie.createdby.username }}
+        <div class="col">
+            <ul class="list-group">
+                <li class="h4 list-group-item d-flex justify-content-between align-items-center">
+                  <span class="text-muted">Nom :</span> {{ app.user.lastname }}
+                  <button type="button" class="btn btn-warning">Modifier</button>
+                </li>
+                <li class="h4 list-group-item d-flex justify-content-between align-items-center">
+                    <span class="text-muted">Prénom :</span> {{ app.user.firstname }}
+                    <button type="button" class="btn btn-warning">Modifier</button>
+                </li>
+                <li class="h4 list-group-item d-flex justify-content-between align-items-center">
+                    <span class="text-muted">Email :</span> {{ app.user.email }}
+                    <button type="button" class="btn btn-warning">Modifier</button>
+                </li>
+                <li class="h4 list-group-item d-flex justify-content-between align-items-center">
+                    <span class="text-muted">Pseudo :</span> {{ app.user.username }}
+                    <button type="button" class="btn btn-warning">Modifier</button>
+                </li>    
+            </ul>
+            <a href="{{ path('usersMovies') }}" class="btn btn-success">Ajouter un film</a>
         </div>
     </div>
-
-    {% endfor %}
-
+</div>
 {% endblock %}
-
-

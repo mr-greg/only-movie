@@ -54,6 +54,7 @@
             <td>
                 <a href="{{ path('editMovies', {id: movie.id}) }}" class="btn btn-success">Modifier</a>
                 <a href="{{ path('deleteMovies', { id: movie.id }) }}" onclick="return confirm('Etes vous sûr de vouloir supprimer ce film ?')" class="btn btn-danger">Supprimer</a>
+                <a href="{{ path('listReviews', {id: movie.id}) }}" class="btn btn-warning text-white">Voir les commentaires</a>
             </td>
             {% endfor %}
         </tr>

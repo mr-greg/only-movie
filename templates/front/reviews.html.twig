@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+{% for message in app.flashes('success') %}
+        <div class="alert alert-success text-center">
+            {{ message }}
+        </div>
+    {% endfor %}
+    {% for message in app.flashes('danger') %}
+        <div class="alert alert-danger text-center">
+            {{ message }}
+        </div>
+{% endfor %}
+
+
+    {% for review in reviews %}
+
+
+        <div class="card-header m-0">
+            <h4 class="card-title">{{ review.rating }} / 10   </h4>
+            <h5>Posté par : {{ review.createdBy.username }}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Le : {{ review.publishDate | date('d-m-Y H:i')}}</h6>
+            <p class="card-text">{{ review.comment }}</p>
+
+        </div>
+        <br>
+    {% endfor %}
+    
+    
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
+
