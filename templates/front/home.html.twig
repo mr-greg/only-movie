@@ -35,7 +35,8 @@
                     <li class="list-group-item">Genre : {{movie.categories.name}}</li>
                 </ul>
                 <div class="card-body">
-                    <a href="{{ path('detailMovies', {id: movie.id}) }}" class="card-link btn btn-info">Voir plus</a>
+                    <a href="{{ path('detailMovies', {id: movie.id}) }}" class="card-link btn btn-info mb-2">Voir plus</a>
+                    <a href="{{ path('addCart', {id: movie.id, route : 'home'}) }}" class="card-link btn btn-info">Ajouter au panier</a>
                 </div>
                 <div class="card-footer text-muted">
                     Sortie en salle : {{ movie.releaseDate | date('d/m/Y') }}

@@ -3,22 +3,29 @@
 namespace App\Controller;
 
 use App\Entity\Actors;
+use App\Entity\Cart;
 use App\Entity\Categories;
 use App\Entity\Movies;
+use App\Entity\Orders;
+use App\Entity\Pricing;
 use App\Entity\Reviews;
 use App\Form\ActorsType;
 use App\Form\CategoriesType;
 use App\Form\MoviesType;
+use App\Form\PricingType;
 use App\Repository\ActorsRepository;
 use App\Repository\CategoriesRepository;
 use App\Repository\MoviesRepository;
+use App\Repository\PricingRepository;
 use App\Repository\ReviewsRepository;
 use App\Repository\UsersRepository;
+use App\Service\Panier\PanierService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\DateTime;
 
 class FrontController extends AbstractController
 {
@@ -514,24 +521,181 @@ class FrontController extends AbstractController
 
     }
 
+    /**
+     * @Route("/listPricing", name="listPricing")
+     * @Route("/editPricing/{id}", name="editPricing")
+     */
+    public function listPricing(PricingRepository $repository, Request $request, EntityManagerInterface $manager, $id=null)
+    {
+
+        if( $id ){
+            $pricing = $repository->find($id);
+        }else{
+            $pricing = new Pricing();
+        }
+
+        $pricings=$repository->findAll();
 
 
+        $form = $this->createForm(PricingType::class, $pricing);
+        $form->handleRequest($request);
+
+        if( $form->isSubmitted() && $form->isValid() ){
+
+            $manager->persist($pricing);
+            $manager->flush();
+
+            if($id){
+                $this->addFlash('success', 'Forfait modifié avec succès');
+            }else{
+                $this->addFlash('success', 'Forfait créé avec succès');
+            }
+
+            return $this->redirectToRoute('listPricing');
+        }
+
+        return $this->render('front/listPricing.html.twig', [
+            'form'=>$form->createView(),
+            'pricings'=>$pricings
+        ]);
+
+    }
 
 
+    /**
+     * @Route("/deletePricing/{id}", name="deletePricing")
+     */
+    public function deletePricing(Pricing $pricing, EntityManagerInterface $manager)
+    {
+        
+        $manager->remove($pricing);
+        $manager->flush();
+        $this->addFlash('success', 'forfait supprimé avec succès');
+        return $this->redirectToRoute('listPricing');
+
+    }
 
 
+        /**
+     * @Route("/addCart/{id}/{route}", name="addCart")
+     */
+    public function addCart($id, PanierService $panierService, $route)
+    {
+        $panierService->add($id);
+
+        ($panierService->getFullCart());
+
+        if ($route=='home'):
+        $this->addFlash('success', 'Ajout au panier effectué !');
+        return $this->redirectToRoute('home');
+        else:
+        return $this->redirectToRoute('fullCart');
+        endif;
+
+    }
+
+    /**
+     * @Route("/removeCart/{id}", name="removeCart")
+     */
+    public function removeCart($id, PanierService $panierService)
+    {
+        $panierService->remove($id);
+        $this->addFlash('success', 'Article retiré !');
+        return $this->redirectToRoute('fullCart');
 
 
+    }
+
+    /**
+     * @Route("/deleteCart/{id}", name="deleteCart")
+     */
+    public function deleteCart($id, PanierService $panierService)
+    {
+        $panierService->delete($id);
+        return $this->redirectToRoute('fullCart');
 
 
+    }
+
+    /**
+     * @Route("/fullCart", name="fullCart")
+     * @Route("/order/{param}", name="order")
+     */
+    public function fullCart(PanierService $panierService, PricingRepository $repository, $param=null)
+    {
+
+        $pricings=$repository->findAll();
+        $affich = false;
+        if( $param ){
+
+            $affich=true;
+            
+        }
+
+        $fullCart=$panierService->getFullCart();
+
+        return $this->render('front/fullCart.html.twig',[
+            'fullCart'=>$fullCart,
+            'affich'=>$affich,
+            'pricings'=>$pricings
+        ]);
+
+    }
 
 
+    /**
+     *
+     * @Route("/finalOrder/{id}", name="finalOrder")
+     */
+    public function order(PricingRepository $repository, PanierService $panierService, EntityManagerInterface $manager, $id = null)
+    {
+        if (!empty($_GET['pricing'])):
+            $pricing = $repository->find($_GET['pricing']);
+            $price = $pricing->getPrice();
+            $panier = $panierService->getFullCart();
+            $count = 0;
+            foreach ($panier as $item):
+                $count += $item['quantity'];
+            endforeach;
+            $total = $count * $price;
+            $affich = true;
+            return $this->render('front/fullCart.html.twig', [
+                'affich' => $affich,
+                'total' => $total,
+                'pricings' => "",
+                'price' => $_GET['pricing']
+
+            ]);
+
+        endif;
+
+        if ($id):
+            $forfait = $repository->find($id);
+            $orders = new Orders();
+            $orders->setDate(new \DateTime())->setPricing($forfait)->setUser($this->getUser());
+            $panier = $panierService->getFullCart();
+
+            foreach ($panier as $item):
+
+                $cart = new Cart();
+                $cart->setOrders($orders)->setMovies($item['movie'])->setQuantity($item['quantity']);
+                $manager->persist($cart);
+
+                $panierService->delete($item['movie']->getId());
+            
+            endforeach;
+            $manager->persist($orders);
+            $manager->flush();
+            $this->addFlash('success', "Merci pour votre achat");
+            return $this->redirectToRoute('home');
 
 
+        endif;
 
 
-
-
+    }
 
 
 }
+
+

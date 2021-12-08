@@ -68,10 +68,16 @@ class Movies
      */
     private $reviews;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Cart::class, mappedBy="movies")
+     */
+    private $carts;
+
     public function __construct()
     {
         $this->actors = new ArrayCollection();
         $this->reviews = new ArrayCollection();
+        $this->carts = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -214,6 +220,36 @@ class Movies
             // set the owning side to null (unless already changed)
             if ($review->getMovie() === $this) {
                 $review->setMovie(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Cart[]
+     */
+    public function getCarts(): Collection
+    {
+        return $this->carts;
+    }
+
+    public function addCart(Cart $cart): self
+    {
+        if (!$this->carts->contains($cart)) {
+            $this->carts[] = $cart;
+            $cart->setMovies($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCart(Cart $cart): self
+    {
+        if ($this->carts->removeElement($cart)) {
+            // set the owning side to null (unless already changed)
+            if ($cart->getMovies() === $this) {
+                $cart->setMovies(null);
             }
         }
 
